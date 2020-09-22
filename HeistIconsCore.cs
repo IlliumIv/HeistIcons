@@ -127,14 +127,22 @@ namespace HeistIcons
                         {
                             position = screentCenterCache + MapIcon.DeltaInWorldToMinimapDelta(
                                 e.GetComponent<Positioned>().GridPos - playerPos, Diag, scale, (iconZ - posZ) / (9f / mapWindowLargeMapZoom));
-                            
+
+                            Graphics.DrawImage(icon.Texture, new RectangleF(position.X - size / 2f, position.Y - size / 2f, size, size), icon.Color);
                         }
                         else
+                        {
                             position = screentCenterCache + MapIcon.DeltaInWorldToMinimapDelta(
                                 e.GetComponent<Positioned>().GridPos - playerPos, Diag, 240f, (iconZ - posZ) / 20);
 
+                            var smallMinimap = GameController.Game.IngameState.IngameUi.Map.SmallMiniMap;
+                            var mapRect = smallMinimap.GetClientRect();
+                            var rect = new RectangleF(position.X - size / 2f, position.Y - size / 2f, size, size);
+                            mapRect.Contains(ref rect, out var isContain);
 
-                        Graphics.DrawImage(icon.Texture, new RectangleF(position.X - size / 2f, position.Y - size / 2f, size, size), icon.Color);
+                            if (isContain)
+                                Graphics.DrawImage(icon.Texture, new RectangleF(position.X - size / 2f, position.Y - size / 2f, size, size), icon.Color);
+                        }
                     }
 
                     renderName = renderName.Replace("RewardRoom", "")
