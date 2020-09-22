@@ -1,5 +1,4 @@
 ﻿using System;
-using ExileCore.PoEMemory.MemoryObjects;
 using ExileCore.Shared.AtlasHelper;
 using SharpDX;
 
