@@ -209,12 +209,12 @@ namespace HeistIcons
             if (e.Path.Contains("Armour")) { return new MapIcon(GetAtlasTexture("ChestUnopenedArmour"), Settings.WorldIconSize.Value); }
             if (e.Path.Contains("Weapons")) { return new MapIcon(GetAtlasTexture("ChestUnopenedWeapons"), Settings.WorldIconSize.Value); }
             if (e.Path.Contains("Jewellery")) { return new MapIcon(GetAtlasTexture("ChestUnopenedTrinkets"), Settings.WorldIconSize.Value); }
-            if (e.Path.Contains("Jewels")) { return new MapIcon(GetAtlasTexture("Jewel"), Settings.WorldIconSize.Value * 2f); }
+            if (e.Path.Contains("Jewels")) { return new MapIcon(GetAtlasTexture("Jewel"), Settings.WorldIconSize.Value * 0.8f); }
             if (e.Path.Contains("Maps")) { return new MapIcon(GetAtlasTexture("ChestUnopenedMaps"), Settings.WorldIconSize.Value); }
             if (e.Path.Contains("DivinationCards")) { return new MapIcon(GetAtlasTexture("ChestUnopenedDivination"), Settings.WorldIconSize.Value); }
-            if (e.Path.Contains("StackedDecks")) { return new MapIcon(GetAtlasTexture("StackedDecks"), Settings.WorldIconSize.Value * 2f); }
+            if (e.Path.Contains("StackedDecks")) { return new MapIcon(GetAtlasTexture("StackedDecks"), Settings.WorldIconSize.Value * 0.8f); }
             if (e.Path.Contains("Gems")) { return new MapIcon(GetAtlasTexture("ChestUnopenedGems"), Settings.WorldIconSize.Value); }
-            if (e.Path.Contains("Corrupted")) { return new MapIcon(GetAtlasTexture("Corruption"), Settings.WorldIconSize.Value * 2f); }
+            if (e.Path.Contains("Corrupted")) { return new MapIcon(GetAtlasTexture("Corruption"), Settings.WorldIconSize.Value * 0.8f); }
             if (e.Path.Contains("Uniques")) { return new MapIcon(GetAtlasTexture("ChestUnopenedUniques"), Settings.WorldIconSize.Value); }
             if (e.Path.Contains("Prophecies")) { return new MapIcon(GetAtlasTexture("ChestUnopenedProphecies"), Settings.WorldIconSize.Value); }
             if (e.Path.Contains("Essences")) { return new MapIcon(GetAtlasTexture("ChestUnopenedEssence"), Settings.WorldIconSize.Value); }
@@ -226,7 +226,8 @@ namespace HeistIcons
         {
             // if (e.Path.Contains("Hideouts")) { return new MapIcon(GetAtlasTexture("HeistPathChest"), Settings.IconSize.Value); }
 
-            if (e.Path.Contains("Monster")) { return new MapIcon(GetAtlasTexture("HeistSpottedMiniBoss"), Settings.MapIconSize.Value * 0.8f); }
+            if (e.Path.Contains("Heist") && e.Path.Contains("Monster")) { return new MapIcon(GetAtlasTexture("HeistSpottedMiniBoss"), Settings.MapIconSize.Value * 0.8f); }
+
             if (e.Path.Contains("Smugglers")) { return new MapIcon(GetAtlasTexture("HeistSumgglersCache"), Settings.MapIconSize.Value); }
             if (e.Path.Contains("Safe")) { return new MapIcon(GetAtlasTexture("HeistPathChest"), Settings.MapIconSize.Value); }
             if (e.Path.Contains("QualityCurrency")) { return new MapIcon(GetAtlasTexture("RewardCurrency"), Settings.MapIconSize.Value, Color.Gray); }
