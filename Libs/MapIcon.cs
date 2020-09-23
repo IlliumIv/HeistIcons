@@ -10,7 +10,7 @@ namespace HeistIcons.Libs
         public Color Color = Color.White;
         public float Size;
 
-        public MapIcon(AtlasTexture texture, Color color, float size)
+        public MapIcon(AtlasTexture texture, float size, Color color)
             : this(texture, size)
         {
             Color = color;

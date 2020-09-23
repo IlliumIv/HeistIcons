@@ -89,10 +89,10 @@ namespace HeistIcons
                     if (e == null)
                         continue;
 
-                    if (e.League != LeagueType.Heist)
+                    if (e.Type == EntityType.Monster && e.Rarity != MonsterRarity.Unique)
                         continue;
 
-                    if (e.Type == EntityType.Monster && e.Rarity != MonsterRarity.Unique)
+                    if (e.Type == EntityType.Monster && e.IsDead)
                         continue;
 
                     if (e.Type == EntityType.Chest && e.IsOpened)
@@ -103,6 +103,7 @@ namespace HeistIcons
 
                     string renderName = e.Path
                         .Replace("Metadata/Chests/LeagueHeist/HeistChest", "")
+                        .Replace("Metadata/Chests/LeaguesHeist/HeistChest", "")
 
                         .Replace("Military", "")
                         .Replace("Thug", "")
@@ -145,6 +146,12 @@ namespace HeistIcons
                         }
                     }
 
+                    if (Settings.TextEnable)
+                        continue;
+
+                    if (e.Type != EntityType.Chest)
+                        continue;
+
                     renderName = renderName.Replace("RewardRoom", "")
                         .Replace("LockPicking", "")
                         .Replace("BruteForce", "")
@@ -183,6 +190,7 @@ namespace HeistIcons
             if (e.Path.Contains("Monster")) { return new MapIcon(GetAtlasTexture("HeistSpottedMiniBoss"), Settings.IconSize.Value * (float)0.8); }
             if (e.Path.Contains("Smugglers")) { return new MapIcon(GetAtlasTexture("HeistSumgglersCache"), Settings.IconSize.Value); }
             if (e.Path.Contains("Safe")) { return new MapIcon(GetAtlasTexture("HeistPathChest"), Settings.IconSize.Value); }
+            if (e.Path.Contains("QualityCurrency")) { return new MapIcon(GetAtlasTexture("RewardCurrency"), Settings.IconSize.Value, Color.Gray); }
             if (e.Path.Contains("Currency")) { return new MapIcon(GetAtlasTexture("RewardCurrency"), Settings.IconSize.Value); }
             if (e.Path.Contains("Armour")) { return new MapIcon(GetAtlasTexture("RewardArmour"), Settings.IconSize.Value); }
             if (e.Path.Contains("Weapons")) { return new MapIcon(GetAtlasTexture("RewardWeapons"), Settings.IconSize.Value); }
