@@ -1,9 +1,537 @@
 {
   "frames": {
-    "RewardFossils": {
+    "ChestUnopenedHarbinger": {
       "frame": {
         "x": 0,
         "y": 0,
+        "w": 110,
+        "h": 110
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 110,
+        "h": 110
+      },
+      "sourceSize": {
+        "w": 110,
+        "h": 110
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "ChestUnopenedAbyss": {
+      "frame": {
+        "x": 110,
+        "y": 0,
+        "w": 110,
+        "h": 110
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 110,
+        "h": 110
+      },
+      "sourceSize": {
+        "w": 110,
+        "h": 110
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "ChestUnopenedBlight": {
+      "frame": {
+        "x": 0,
+        "y": 110,
+        "w": 110,
+        "h": 110
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 110,
+        "h": 110
+      },
+      "sourceSize": {
+        "w": 110,
+        "h": 110
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "ChestUnopenedBreach": {
+      "frame": {
+        "x": 110,
+        "y": 110,
+        "w": 110,
+        "h": 110
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 110,
+        "h": 110
+      },
+      "sourceSize": {
+        "w": 110,
+        "h": 110
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "ChestUnopenedCurrency": {
+      "frame": {
+        "x": 220,
+        "y": 0,
+        "w": 110,
+        "h": 110
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 110,
+        "h": 110
+      },
+      "sourceSize": {
+        "w": 110,
+        "h": 110
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "ChestUnopenedDivination": {
+      "frame": {
+        "x": 220,
+        "y": 110,
+        "w": 110,
+        "h": 110
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 110,
+        "h": 110
+      },
+      "sourceSize": {
+        "w": 110,
+        "h": 110
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "ChestUnopenedEssence": {
+      "frame": {
+        "x": 0,
+        "y": 220,
+        "w": 110,
+        "h": 110
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 110,
+        "h": 110
+      },
+      "sourceSize": {
+        "w": 110,
+        "h": 110
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "ChestUnopenedFossils": {
+      "frame": {
+        "x": 110,
+        "y": 220,
+        "w": 110,
+        "h": 110
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 110,
+        "h": 110
+      },
+      "sourceSize": {
+        "w": 110,
+        "h": 110
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "ChestUnopenedFragments": {
+      "frame": {
+        "x": 220,
+        "y": 220,
+        "w": 110,
+        "h": 110
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 110,
+        "h": 110
+      },
+      "sourceSize": {
+        "w": 110,
+        "h": 110
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "ChestUnopenedGems": {
+      "frame": {
+        "x": 330,
+        "y": 0,
+        "w": 110,
+        "h": 110
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 110,
+        "h": 110
+      },
+      "sourceSize": {
+        "w": 110,
+        "h": 110
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "ChestUnopenedGeneric": {
+      "frame": {
+        "x": 330,
+        "y": 110,
+        "w": 110,
+        "h": 110
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 110,
+        "h": 110
+      },
+      "sourceSize": {
+        "w": 110,
+        "h": 110
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "ChestUnopenedArmour": {
+      "frame": {
+        "x": 330,
+        "y": 220,
+        "w": 110,
+        "h": 110
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 110,
+        "h": 110
+      },
+      "sourceSize": {
+        "w": 110,
+        "h": 110
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "ChestUnopenedLabyrinth": {
+      "frame": {
+        "x": 0,
+        "y": 330,
+        "w": 110,
+        "h": 110
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 110,
+        "h": 110
+      },
+      "sourceSize": {
+        "w": 110,
+        "h": 110
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "ChestUnopenedLegion": {
+      "frame": {
+        "x": 110,
+        "y": 330,
+        "w": 110,
+        "h": 110
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 110,
+        "h": 110
+      },
+      "sourceSize": {
+        "w": 110,
+        "h": 110
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "ChestUnopenedMaps": {
+      "frame": {
+        "x": 220,
+        "y": 330,
+        "w": 110,
+        "h": 110
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 110,
+        "h": 110
+      },
+      "sourceSize": {
+        "w": 110,
+        "h": 110
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "ChestUnopenedPerandus": {
+      "frame": {
+        "x": 330,
+        "y": 330,
+        "w": 110,
+        "h": 110
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 110,
+        "h": 110
+      },
+      "sourceSize": {
+        "w": 110,
+        "h": 110
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "ChestUnopenedProphecies": {
+      "frame": {
+        "x": 440,
+        "y": 0,
+        "w": 110,
+        "h": 110
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 110,
+        "h": 110
+      },
+      "sourceSize": {
+        "w": 110,
+        "h": 110
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "ChestUnopenedScarabs": {
+      "frame": {
+        "x": 440,
+        "y": 110,
+        "w": 110,
+        "h": 110
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 110,
+        "h": 110
+      },
+      "sourceSize": {
+        "w": 110,
+        "h": 110
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "ChestUnopenedTalismans": {
+      "frame": {
+        "x": 440,
+        "y": 220,
+        "w": 110,
+        "h": 110
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 110,
+        "h": 110
+      },
+      "sourceSize": {
+        "w": 110,
+        "h": 110
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "ChestUnopenedTrinkets": {
+      "frame": {
+        "x": 440,
+        "y": 330,
+        "w": 110,
+        "h": 110
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 110,
+        "h": 110
+      },
+      "sourceSize": {
+        "w": 110,
+        "h": 110
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "ChestUnopenedUniques": {
+      "frame": {
+        "x": 0,
+        "y": 440,
+        "w": 110,
+        "h": 110
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 110,
+        "h": 110
+      },
+      "sourceSize": {
+        "w": 110,
+        "h": 110
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "ChestUnopenedWeapons": {
+      "frame": {
+        "x": 110,
+        "y": 440,
+        "w": 110,
+        "h": 110
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 110,
+        "h": 110
+      },
+      "sourceSize": {
+        "w": 110,
+        "h": 110
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "HeistSpottedMiniBoss": {
+      "frame": {
+        "x": 220,
+        "y": 440,
         "w": 64,
         "h": 64
       },
@@ -24,10 +552,10 @@
         "y": 0.5
       }
     },
-    "AfflictionInitiator": {
+    "Corruption": {
       "frame": {
-        "x": 64,
-        "y": 0,
+        "x": 284,
+        "y": 440,
         "w": 64,
         "h": 64
       },
@@ -50,8 +578,8 @@
     },
     "HeistPathChest": {
       "frame": {
-        "x": 0,
-        "y": 64,
+        "x": 348,
+        "y": 440,
         "w": 64,
         "h": 64
       },
@@ -72,10 +600,10 @@
         "y": 0.5
       }
     },
-    "HeistSpottedMiniBoss": {
+    "AfflictionInitiator": {
       "frame": {
-        "x": 64,
-        "y": 64,
+        "x": 412,
+        "y": 440,
         "w": 64,
         "h": 64
       },
@@ -98,8 +626,8 @@
     },
     "HeistSumgglersCache": {
       "frame": {
-        "x": 128,
-        "y": 0,
+        "x": 476,
+        "y": 440,
         "w": 64,
         "h": 64
       },
@@ -122,8 +650,8 @@
     },
     "Jewel": {
       "frame": {
-        "x": 128,
-        "y": 64,
+        "x": 550,
+        "y": 0,
         "w": 64,
         "h": 64
       },
@@ -146,8 +674,8 @@
     },
     "MetamorphosisMonster": {
       "frame": {
-        "x": 0,
-        "y": 128,
+        "x": 550,
+        "y": 64,
         "w": 64,
         "h": 64
       },
@@ -170,7 +698,7 @@
     },
     "RewardAbyss": {
       "frame": {
-        "x": 64,
+        "x": 550,
         "y": 128,
         "w": 64,
         "h": 64
@@ -194,8 +722,8 @@
     },
     "RewardArmour": {
       "frame": {
-        "x": 128,
-        "y": 128,
+        "x": 550,
+        "y": 192,
         "w": 64,
         "h": 64
       },
@@ -218,8 +746,8 @@
     },
     "RewardBlight": {
       "frame": {
-        "x": 192,
-        "y": 0,
+        "x": 550,
+        "y": 256,
         "w": 64,
         "h": 64
       },
@@ -242,8 +770,8 @@
     },
     "RewardBreach": {
       "frame": {
-        "x": 192,
-        "y": 64,
+        "x": 550,
+        "y": 320,
         "w": 64,
         "h": 64
       },
@@ -266,8 +794,8 @@
     },
     "RewardCurrency": {
       "frame": {
-        "x": 192,
-        "y": 128,
+        "x": 550,
+        "y": 384,
         "w": 64,
         "h": 64
       },
@@ -290,8 +818,8 @@
     },
     "RewardDivinationCards": {
       "frame": {
-        "x": 0,
-        "y": 192,
+        "x": 540,
+        "y": 448,
         "w": 64,
         "h": 64
       },
@@ -314,8 +842,8 @@
     },
     "RewardEssences": {
       "frame": {
-        "x": 64,
-        "y": 192,
+        "x": 0,
+        "y": 550,
         "w": 64,
         "h": 64
       },
@@ -336,10 +864,10 @@
         "y": 0.5
       }
     },
-    "Corruption": {
+    "RewardFossils": {
       "frame": {
-        "x": 128,
-        "y": 192,
+        "x": 64,
+        "y": 550,
         "w": 64,
         "h": 64
       },
@@ -362,8 +890,8 @@
     },
     "RewardFragments": {
       "frame": {
-        "x": 192,
-        "y": 192,
+        "x": 128,
+        "y": 550,
         "w": 64,
         "h": 64
       },
@@ -386,8 +914,8 @@
     },
     "RewardGems": {
       "frame": {
-        "x": 256,
-        "y": 0,
+        "x": 192,
+        "y": 550,
         "w": 64,
         "h": 64
       },
@@ -411,7 +939,7 @@
     "RewardGenericItems": {
       "frame": {
         "x": 256,
-        "y": 64,
+        "y": 512,
         "w": 64,
         "h": 64
       },
@@ -434,8 +962,8 @@
     },
     "RewardHarbinger": {
       "frame": {
-        "x": 256,
-        "y": 128,
+        "x": 320,
+        "y": 512,
         "w": 64,
         "h": 64
       },
@@ -458,8 +986,8 @@
     },
     "RewardJewellery": {
       "frame": {
-        "x": 256,
-        "y": 192,
+        "x": 384,
+        "y": 512,
         "w": 64,
         "h": 64
       },
@@ -482,8 +1010,8 @@
     },
     "RewardLabyrinth": {
       "frame": {
-        "x": 0,
-        "y": 256,
+        "x": 448,
+        "y": 504,
         "w": 64,
         "h": 64
       },
@@ -506,8 +1034,8 @@
     },
     "RewardMaps": {
       "frame": {
-        "x": 64,
-        "y": 256,
+        "x": 512,
+        "y": 512,
         "w": 64,
         "h": 64
       },
@@ -530,8 +1058,8 @@
     },
     "RewardPerandus": {
       "frame": {
-        "x": 128,
-        "y": 256,
+        "x": 614,
+        "y": 0,
         "w": 64,
         "h": 64
       },
@@ -554,8 +1082,8 @@
     },
     "RewardProphecy": {
       "frame": {
-        "x": 192,
-        "y": 256,
+        "x": 614,
+        "y": 64,
         "w": 64,
         "h": 64
       },
@@ -578,8 +1106,8 @@
     },
     "RewardTalisman": {
       "frame": {
-        "x": 256,
-        "y": 256,
+        "x": 614,
+        "y": 128,
         "w": 64,
         "h": 64
       },
@@ -602,8 +1130,8 @@
     },
     "RewardUniques": {
       "frame": {
-        "x": 320,
-        "y": 0,
+        "x": 614,
+        "y": 192,
         "w": 64,
         "h": 64
       },
@@ -626,8 +1154,8 @@
     },
     "RewardWeaponEnchants": {
       "frame": {
-        "x": 320,
-        "y": 64,
+        "x": 614,
+        "y": 256,
         "w": 64,
         "h": 64
       },
@@ -650,8 +1178,8 @@
     },
     "RewardWeapons": {
       "frame": {
-        "x": 320,
-        "y": 128,
+        "x": 614,
+        "y": 320,
         "w": 64,
         "h": 64
       },
@@ -674,8 +1202,8 @@
     },
     "StackedDecks": {
       "frame": {
-        "x": 320,
-        "y": 192,
+        "x": 614,
+        "y": 384,
         "w": 64,
         "h": 64
       },
@@ -703,8 +1231,8 @@
     "image": "HeistIconAtlas.png",
     "format": "RGBA8888",
     "size": {
-      "w": 384,
-      "h": 320
+      "w": 678,
+      "h": 614
     },
     "scale": 1
   }

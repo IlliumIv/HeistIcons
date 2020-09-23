@@ -19,25 +19,25 @@ namespace HeistIcons
         private float scale;
         private Vector2 screentCenterCache;
 
-        private CachedValue<RectangleF> _mapRect;
+        private CachedValue<RectangleF> _mapRectangle;
         private CachedValue<float> _diag;
 
         private ExileCore.PoEMemory.Elements.Map MapWindow => GameController.Game.IngameState.IngameUi.Map;
-        private RectangleF MapRect => _mapRect?.Value ?? (_mapRect = new TimeCache<RectangleF>(() => MapWindow.GetClientRect(), 100)).Value;
+        private RectangleF MapRectangle => _mapRectangle?.Value ?? (_mapRectangle = new TimeCache<RectangleF>(() => MapWindow.GetClientRect(), 100)).Value;
         private Camera Camera => GameController.Game.IngameState.Camera;
         private float Diag =>
             _diag?.Value ?? (_diag = new TimeCache<float>(() =>
             {
                 if (ingameStateIngameUi.Map.SmallMiniMap.IsVisibleLocal)
                 {
-                    var mapRect = ingameStateIngameUi.Map.SmallMiniMap.GetClientRect();
-                    return (float)(Math.Sqrt(mapRect.Width * mapRect.Width + mapRect.Height * mapRect.Height) / 2f);
+                    var mapRectangle = ingameStateIngameUi.Map.SmallMiniMap.GetClientRect();
+                    return (float)(Math.Sqrt(mapRectangle.Width * mapRectangle.Width + mapRectangle.Height * mapRectangle.Height) / 2f);
                 }
 
                 return (float)Math.Sqrt(Camera.Width * Camera.Width + Camera.Height * Camera.Height);
             }, 100)).Value;
         private Vector2 ScreenCenter =>
-            new Vector2(MapRect.Width / 2, MapRect.Height / 2 - 20) + new Vector2(MapRect.X, MapRect.Y) +
+            new Vector2(MapRectangle.Width / 2, MapRectangle.Height / 2 - 20) + new Vector2(MapRectangle.X, MapRectangle.Y) +
             new Vector2(MapWindow.LargeMapShiftX, MapWindow.LargeMapShiftY);
 
         public override bool Initialise()
@@ -59,8 +59,8 @@ namespace HeistIcons
 
             if (ingameStateIngameUi.Map.SmallMiniMap.IsVisibleLocal)
             {
-                var mapRect = ingameStateIngameUi.Map.SmallMiniMap.GetClientRectCache;
-                screentCenterCache = new Vector2(mapRect.X + mapRect.Width / 2, mapRect.Y + mapRect.Height / 2);
+                var mapRectangle = ingameStateIngameUi.Map.SmallMiniMap.GetClientRectCache;
+                screentCenterCache = new Vector2(mapRectangle.X + mapRectangle.Width / 2, mapRectangle.Y + mapRectangle.Height / 2);
                 largeMap = false;
             }
             else if (ingameStateIngameUi.Map.LargeMap.IsVisibleLocal)
@@ -101,6 +101,9 @@ namespace HeistIcons
                     if (!e.IsHostile)
                         continue;
 
+                    var renderComponent = e?.GetComponent<Render>();
+                    if (renderComponent == null) continue;
+
                     string renderName = e.Path
                         .Replace("Metadata/Chests/LeagueHeist/HeistChest", "")
                         .Replace("Metadata/Chests/LeaguesHeist/HeistChest", "")
@@ -112,16 +115,13 @@ namespace HeistIcons
 
                         .Replace("Secondary", "");
 
-                    if (!renderName.Contains("RewardRoom"))
+                    if (!e.Path.Contains("RewardRoom"))
                     {
-                        var component = e?.GetComponent<Render>();
-                        if (component == null) continue;
-
                         var icon = GetMapIcon(e);
                         if (icon == null) continue;
 
                         var size = icon.Size * (1 + mapWindowLargeMapZoom);
-                        var iconZ = component.Pos.Z;
+                        var iconZ = renderComponent.Pos.Z;
                         Vector2 position;
 
                         if (largeMap)
@@ -137,44 +137,58 @@ namespace HeistIcons
                                 e.GetComponent<Positioned>().GridPos - playerPos, Diag, 240f, (iconZ - posZ) / 20);
 
                             var smallMinimap = GameController.Game.IngameState.IngameUi.Map.SmallMiniMap;
-                            var mapRect = smallMinimap.GetClientRect();
-                            var rect = new RectangleF(position.X - size / 2f, position.Y - size / 2f, size, size);
-                            mapRect.Contains(ref rect, out var isContain);
+                            var mapRectangle = smallMinimap.GetClientRect();
+                            var rectangle = new RectangleF(position.X - size / 2f, position.Y - size / 2f, size, size);
+                            mapRectangle.Contains(ref rectangle, out var isContain);
 
                             if (isContain)
                                 Graphics.DrawImage(icon.Texture, new RectangleF(position.X - size / 2f, position.Y - size / 2f, size, size), icon.Color);
                         }
                     }
 
-                    if (Settings.TextEnable)
-                        continue;
+                    if (e.Type != EntityType.Chest) continue;
 
-                    if (e.Type != EntityType.Chest)
-                        continue;
+                    if (Settings.TextEnable || Settings.WorldIcon)
+                    {
+                        var camera = GameController.IngameState.Camera;
+                        var worldtoscreen = camera.WorldToScreen(e.Pos);
 
-                    renderName = renderName.Replace("RewardRoom", "")
-                        .Replace("LockPicking", "")
-                        .Replace("BruteForce", "")
-                        .Replace("Perception", "")
-                        .Replace("Demolition", "")
-                        .Replace("CounterThaumaturge", "")
-                        .Replace("TrapDisarmament", "")
-                        .Replace("Agility", "")
-                        .Replace("Deception", "")
-                        .Replace("Engineering", "");
+                        if (Settings.TextEnable)
+                        {
+                            renderName = renderName.Replace("RewardRoom", "")
+                                .Replace("LockPicking", "")
+                                .Replace("BruteForce", "")
+                                .Replace("Perception", "")
+                                .Replace("Demolition", "")
+                                .Replace("CounterThaumaturge", "")
+                                .Replace("TrapDisarmament", "")
+                                .Replace("Agility", "")
+                                .Replace("Deception", "")
+                                .Replace("Engineering", "");
+                            renderName = string.Join("", renderName.ToCharArray().Select(x => char.IsUpper(x) ? " " + x : "" + x).ToList());
+                            renderName += " ";
 
-                    renderName = string.Join("", renderName.ToCharArray().Select(x => char.IsUpper(x) ? " " + x : "" + x).ToList());
+                            var textBox = Graphics.MeasureText(renderName);
+                            var backgroundBox = new System.Numerics.Vector2(textBox.X * (float)1.2, textBox.Y * (float)2);
+                            var rectangle = new RectangleF(worldtoscreen.X - backgroundBox.X / 2, worldtoscreen.Y - (backgroundBox.Y - textBox.Y) / 2, backgroundBox.X, backgroundBox.Y);
 
-                    var camera = GameController.IngameState.Camera;
-                    var worldtoscreen = camera.WorldToScreen(e.Pos);
-                    var textBox = Graphics.MeasureText(renderName);
-                    var backgroundBox = new System.Numerics.Vector2(textBox.X * (float)1.2, textBox.Y * (float)2);
-                    var rectangle = new RectangleF(worldtoscreen.X - backgroundBox.X / 2, worldtoscreen.Y - (backgroundBox.Y - textBox.Y) / 2, backgroundBox.X, backgroundBox.Y);
+                            Graphics.DrawText(renderName, worldtoscreen.ToVector2Num(), Settings.TextColor.Value, 22, "Default:13", FontAlign.Center);
+                            Graphics.DrawBox(rectangle, Settings.TextBackgroundColor.Value);
+                            Graphics.DrawFrame(rectangle, Settings.TextBorderColor.Value, 1);
+                        }
 
-                    Graphics.DrawText(renderName, worldtoscreen.ToVector2Num(), Settings.TextColor.Value, 22, "Default:13", FontAlign.Center);
-                    Graphics.DrawBox(rectangle, Settings.TextBackgroundColor.Value);
-                    Graphics.DrawFrame(rectangle, Settings.TextBorderColor.Value, 1);
+                        if (Settings.WorldIcon && !e.Path.Contains("RewardRoom"))
+                        {
+                            var icon = GetWorldIcon(e);
+                            if (icon == null) continue;
 
+                            worldtoscreen = camera.WorldToScreen(e.Pos.Translate(0, 0, -150));
+
+                            if (worldtoscreen == new Vector2()) continue;
+
+                            Graphics.DrawImage(icon.Texture, new RectangleF(worldtoscreen.X - icon.Size / 2f, worldtoscreen.Y - icon.Size / 2f, icon.Size, icon.Size), icon.Color);
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -185,25 +199,50 @@ namespace HeistIcons
             base.Render();
         }
 
+        private MapIcon GetWorldIcon(Entity e)
+        {
+            // if (e.Path.Contains("Hideouts")) { return new MapIcon(GetAtlasTexture("ChestUnopenedGeneric"), Settings.WorldIconSize.Value); }
+
+            if (e.Path.Contains("Safe")) { return new MapIcon(GetAtlasTexture("ChestUnopenedGeneric"), Settings.WorldIconSize.Value); }
+            if (e.Path.Contains("QualityCurrency")) { return new MapIcon(GetAtlasTexture("ChestUnopenedCurrency"), Settings.WorldIconSize.Value, Color.Gray); }
+            if (e.Path.Contains("Currency")) { return new MapIcon(GetAtlasTexture("ChestUnopenedCurrency"), Settings.WorldIconSize.Value); }
+            if (e.Path.Contains("Armour")) { return new MapIcon(GetAtlasTexture("ChestUnopenedArmour"), Settings.WorldIconSize.Value); }
+            if (e.Path.Contains("Weapons")) { return new MapIcon(GetAtlasTexture("ChestUnopenedWeapons"), Settings.WorldIconSize.Value); }
+            if (e.Path.Contains("Jewellery")) { return new MapIcon(GetAtlasTexture("ChestUnopenedTrinkets"), Settings.WorldIconSize.Value); }
+            if (e.Path.Contains("Jewels")) { return new MapIcon(GetAtlasTexture("Jewel"), Settings.WorldIconSize.Value * 2f); }
+            if (e.Path.Contains("Maps")) { return new MapIcon(GetAtlasTexture("ChestUnopenedMaps"), Settings.WorldIconSize.Value); }
+            if (e.Path.Contains("DivinationCards")) { return new MapIcon(GetAtlasTexture("ChestUnopenedDivination"), Settings.WorldIconSize.Value); }
+            if (e.Path.Contains("StackedDecks")) { return new MapIcon(GetAtlasTexture("StackedDecks"), Settings.WorldIconSize.Value * 2f); }
+            if (e.Path.Contains("Gems")) { return new MapIcon(GetAtlasTexture("ChestUnopenedGems"), Settings.WorldIconSize.Value); }
+            if (e.Path.Contains("Corrupted")) { return new MapIcon(GetAtlasTexture("Corruption"), Settings.WorldIconSize.Value * 2f); }
+            if (e.Path.Contains("Uniques")) { return new MapIcon(GetAtlasTexture("ChestUnopenedUniques"), Settings.WorldIconSize.Value); }
+            if (e.Path.Contains("Prophecies")) { return new MapIcon(GetAtlasTexture("ChestUnopenedProphecies"), Settings.WorldIconSize.Value); }
+            if (e.Path.Contains("Essences")) { return new MapIcon(GetAtlasTexture("ChestUnopenedEssence"), Settings.WorldIconSize.Value); }
+
+            return null;
+        }
+
         public MapIcon GetMapIcon(Entity e)
         {
-            if (e.Path.Contains("Monster")) { return new MapIcon(GetAtlasTexture("HeistSpottedMiniBoss"), Settings.IconSize.Value * (float)0.8); }
-            if (e.Path.Contains("Smugglers")) { return new MapIcon(GetAtlasTexture("HeistSumgglersCache"), Settings.IconSize.Value); }
-            if (e.Path.Contains("Safe")) { return new MapIcon(GetAtlasTexture("HeistPathChest"), Settings.IconSize.Value); }
-            if (e.Path.Contains("QualityCurrency")) { return new MapIcon(GetAtlasTexture("RewardCurrency"), Settings.IconSize.Value, Color.Gray); }
-            if (e.Path.Contains("Currency")) { return new MapIcon(GetAtlasTexture("RewardCurrency"), Settings.IconSize.Value); }
-            if (e.Path.Contains("Armour")) { return new MapIcon(GetAtlasTexture("RewardArmour"), Settings.IconSize.Value); }
-            if (e.Path.Contains("Weapons")) { return new MapIcon(GetAtlasTexture("RewardWeapons"), Settings.IconSize.Value); }
-            if (e.Path.Contains("Jewellery")) { return new MapIcon(GetAtlasTexture("RewardJewellery"), Settings.IconSize.Value); }
-            if (e.Path.Contains("Jewels")) { return new MapIcon(GetAtlasTexture("Jewel"), Settings.IconSize.Value); }
-            if (e.Path.Contains("Maps")) { return new MapIcon(GetAtlasTexture("RewardMaps"), Settings.IconSize.Value); }
-            if (e.Path.Contains("DivinationCards")) { return new MapIcon(GetAtlasTexture("RewardDivinationCards"), Settings.IconSize.Value); }
-            if (e.Path.Contains("StackedDecks")) { return new MapIcon(GetAtlasTexture("StackedDecks"), Settings.IconSize.Value); }
-            if (e.Path.Contains("Gems")) { return new MapIcon(GetAtlasTexture("RewardGems"), Settings.IconSize.Value); }
-            if (e.Path.Contains("Corrupted")) { return new MapIcon(GetAtlasTexture("Corruption"), Settings.IconSize.Value); }
-            if (e.Path.Contains("Uniques")) { return new MapIcon(GetAtlasTexture("RewardUniques"), Settings.IconSize.Value); }
-            if (e.Path.Contains("Prophecies")) { return new MapIcon(GetAtlasTexture("RewardProphecy"), Settings.IconSize.Value); }
-            if (e.Path.Contains("Essences")) { return new MapIcon(GetAtlasTexture("RewardEssences"), Settings.IconSize.Value); }
+            // if (e.Path.Contains("Hideouts")) { return new MapIcon(GetAtlasTexture("HeistPathChest"), Settings.IconSize.Value); }
+
+            if (e.Path.Contains("Monster")) { return new MapIcon(GetAtlasTexture("HeistSpottedMiniBoss"), Settings.MapIconSize.Value * 0.8f); }
+            if (e.Path.Contains("Smugglers")) { return new MapIcon(GetAtlasTexture("HeistSumgglersCache"), Settings.MapIconSize.Value); }
+            if (e.Path.Contains("Safe")) { return new MapIcon(GetAtlasTexture("HeistPathChest"), Settings.MapIconSize.Value); }
+            if (e.Path.Contains("QualityCurrency")) { return new MapIcon(GetAtlasTexture("RewardCurrency"), Settings.MapIconSize.Value, Color.Gray); }
+            if (e.Path.Contains("Currency")) { return new MapIcon(GetAtlasTexture("RewardCurrency"), Settings.MapIconSize.Value); }
+            if (e.Path.Contains("Armour")) { return new MapIcon(GetAtlasTexture("RewardArmour"), Settings.MapIconSize.Value); }
+            if (e.Path.Contains("Weapons")) { return new MapIcon(GetAtlasTexture("RewardWeapons"), Settings.MapIconSize.Value); }
+            if (e.Path.Contains("Jewellery")) { return new MapIcon(GetAtlasTexture("RewardJewellery"), Settings.MapIconSize.Value); }
+            if (e.Path.Contains("Jewels")) { return new MapIcon(GetAtlasTexture("Jewel"), Settings.MapIconSize.Value); }
+            if (e.Path.Contains("Maps")) { return new MapIcon(GetAtlasTexture("RewardMaps"), Settings.MapIconSize.Value); }
+            if (e.Path.Contains("DivinationCards")) { return new MapIcon(GetAtlasTexture("RewardDivinationCards"), Settings.MapIconSize.Value); }
+            if (e.Path.Contains("StackedDecks")) { return new MapIcon(GetAtlasTexture("StackedDecks"), Settings.MapIconSize.Value); }
+            if (e.Path.Contains("Gems")) { return new MapIcon(GetAtlasTexture("RewardGems"), Settings.MapIconSize.Value); }
+            if (e.Path.Contains("Corrupted")) { return new MapIcon(GetAtlasTexture("Corruption"), Settings.MapIconSize.Value); }
+            if (e.Path.Contains("Uniques")) { return new MapIcon(GetAtlasTexture("RewardUniques"), Settings.MapIconSize.Value); }
+            if (e.Path.Contains("Prophecies")) { return new MapIcon(GetAtlasTexture("RewardProphecy"), Settings.MapIconSize.Value); }
+            if (e.Path.Contains("Essences")) { return new MapIcon(GetAtlasTexture("RewardEssences"), Settings.MapIconSize.Value); }
 
             return null;
         }

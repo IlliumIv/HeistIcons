@@ -17,8 +17,14 @@ namespace HeistIcons
             Enable = new ToggleNode(false);
         }
 
-        [Menu("Icon Size")]
-        public RangeNode<int> IconSize { get; set; } = new RangeNode<int>(32, 10, 100);
+        [Menu("Map Icon Size")]
+        public RangeNode<int> MapIconSize { get; set; } = new RangeNode<int>(32, 10, 100);
+
+        [Menu("Draw icon to world")]
+        public ToggleNode WorldIcon { get; set; } = new ToggleNode(true);
+
+        [Menu("World Icon Size")]
+        public RangeNode<int> WorldIconSize { get; set; } = new RangeNode<int>(110, 10, 220);
 
         [Menu("Text")]
         public ToggleNode TextEnable { get; set; } = new ToggleNode(false);
