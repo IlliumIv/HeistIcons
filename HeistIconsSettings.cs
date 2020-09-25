@@ -29,6 +29,15 @@ namespace HeistIcons
         [Menu("Text")]
         public ToggleNode TextEnable { get; set; } = new ToggleNode(false);
 
+        [Menu("Use Default Text")]
+        public ToggleNode UseDefaultText { get; set; } = new ToggleNode(true);
+
+        [Menu("Text Background Width Multiplier")]
+        public RangeNode<float> BackgroundWidth { get; set; } = new RangeNode<float>(1.2f, 0, 2);
+
+        [Menu("Text Background Height Multiplier")]
+        public RangeNode<float> BackgroundHeight { get; set; } = new RangeNode<float>(1.4f, 0, 2);
+
         [Menu("Text Color")]
         public ColorNode TextColor { get; set; } = new ColorNode(Color.Black);
 

@@ -8,6 +8,7 @@ using System;
 using System.Linq;
 using ExileCore.PoEMemory.MemoryObjects;
 using ExileCore.PoEMemory.Components;
+using System.Collections.Generic;
 
 namespace HeistIcons
 {
@@ -18,6 +19,9 @@ namespace HeistIcons
         private bool largeMap;
         private float scale;
         private Vector2 screentCenterCache;
+        private Vector2 playerPos;
+        private float posZ;
+        private Queue<Entity> Entities = new Queue<Entity>(128);
 
         private CachedValue<RectangleF> _mapRectangle;
         private CachedValue<float> _diag;
@@ -36,6 +40,7 @@ namespace HeistIcons
 
                 return (float)Math.Sqrt(Camera.Width * Camera.Width + Camera.Height * Camera.Height);
             }, 100)).Value;
+
         private Vector2 ScreenCenter =>
             new Vector2(MapRectangle.Width / 2, MapRectangle.Height / 2 - 20) + new Vector2(MapRectangle.X, MapRectangle.Y) +
             new Vector2(MapWindow.LargeMapShiftX, MapWindow.LargeMapShiftY);
@@ -43,14 +48,12 @@ namespace HeistIcons
         public override bool Initialise()
         {
             Name = "Heist Icons";
-
             return base.Initialise();
         }
 
         public override Job Tick()
         {
-            TickLogic();
-            return null;
+            return GameController.MultiThreadManager.AddJob(TickLogic, nameof(HeistIconsCore));
         }
 
         private void TickLogic()
@@ -71,42 +74,35 @@ namespace HeistIcons
 
             k = Camera.Width < 1024f ? 1120f : 1024f;
             scale = k / Camera.Height * Camera.Width * 3.06f / 4f / MapWindow.LargeMapZoom;
+            playerPos = GameController.Player.GetComponent<Positioned>().GridPos;
+            posZ = GameController.Player.GetComponent<Render>().Pos.Z;
+
+            if (Entities.Count == 0) return;
+
+            var e = Entities.Dequeue();
+
+            if (!e.IsValid) return;
+            if (e.Type == EntityType.Monster && e.IsDead) return;
+            if (e.Type == EntityType.Chest && e.IsOpened) return;
+
+            Entities.Enqueue(e);
         }
 
         public override void Render()
         {
-
-            var entities = GameController.EntityListWrapper.OnlyValidEntities;
-            var playerPos = GameController.Player.GetComponent<Positioned>().GridPos;
-            var posZ = GameController.Player.GetComponent<Render>().Pos.Z;
             var mapWindowLargeMapZoom = MapWindow.LargeMapZoom;
 
-            foreach (var e in entities)
+            foreach (var e in Entities)
             {
                 try
                 {
-
-                    if (e == null)
-                        continue;
-
-                    if (e.Type == EntityType.Monster && e.Rarity != MonsterRarity.Unique)
-                        continue;
-
-                    if (e.Type == EntityType.Monster && e.IsDead)
-                        continue;
-
-                    if (e.Type == EntityType.Chest && e.IsOpened)
-                        continue;
-
-                    if (!e.IsHostile)
-                        continue;
-
                     var renderComponent = e?.GetComponent<Render>();
                     if (renderComponent == null) continue;
 
                     string renderName = e.Path
                         .Replace("Metadata/Chests/LeagueHeist/HeistChest", "")
                         .Replace("Metadata/Chests/LeaguesHeist/HeistChest", "")
+                        .Replace("Metadata/Chests/LeagueHeist/Heist", "")
 
                         .Replace("Military", "")
                         .Replace("Thug", "")
@@ -136,11 +132,10 @@ namespace HeistIcons
                             position = screentCenterCache + MapIcon.DeltaInWorldToMinimapDelta(
                                 e.GetComponent<Positioned>().GridPos - playerPos, Diag, 240f, (iconZ - posZ) / 20);
 
-                            var smallMinimap = GameController.Game.IngameState.IngameUi.Map.SmallMiniMap;
-                            var mapRectangle = smallMinimap.GetClientRect();
+                            var mapRectangle = ingameStateIngameUi.Map.SmallMiniMap.GetClientRectCache;
                             var rectangle = new RectangleF(position.X - size / 2f, position.Y - size / 2f, size, size);
-                            mapRectangle.Contains(ref rectangle, out var isContain);
 
+                            mapRectangle.Contains(ref rectangle, out var isContain);
                             if (isContain)
                                 Graphics.DrawImage(icon.Texture, new RectangleF(position.X - size / 2f, position.Y - size / 2f, size, size), icon.Color);
                         }
@@ -150,8 +145,7 @@ namespace HeistIcons
 
                     if (Settings.TextEnable || Settings.WorldIcon)
                     {
-                        var camera = GameController.IngameState.Camera;
-                        var worldtoscreen = camera.WorldToScreen(e.Pos);
+                        var worldtoscreen = Camera.WorldToScreen(e.Pos);
 
                         if (Settings.TextEnable)
                         {
@@ -169,10 +163,23 @@ namespace HeistIcons
                             renderName += " ";
 
                             var textBox = Graphics.MeasureText(renderName);
-                            var backgroundBox = new System.Numerics.Vector2(textBox.X * (float)1.2, textBox.Y * (float)2);
-                            var rectangle = new RectangleF(worldtoscreen.X - backgroundBox.X / 2, worldtoscreen.Y - (backgroundBox.Y - textBox.Y) / 2, backgroundBox.X, backgroundBox.Y);
+                            System.Numerics.Vector2 backgroundBox;
+                            backgroundBox.X = textBox.X + 2;
+                            backgroundBox.Y = textBox.Y * 2f;
 
-                            Graphics.DrawText(renderName, worldtoscreen.ToVector2Num(), Settings.TextColor.Value, 22, "Default:13", FontAlign.Center);
+                            var rectangleHeight = backgroundBox.Y;
+
+                            if (Settings.UseDefaultText)
+                                Graphics.DrawText(renderName, worldtoscreen.ToVector2Num(), Settings.TextColor.Value, 22, "Default:13", FontAlign.Center);
+                            else
+                            {
+                                Graphics.DrawText(renderName, worldtoscreen.ToVector2Num(), Settings.TextColor.Value, 22, FontAlign.Center);
+                                backgroundBox.X *= Settings.BackgroundWidth;
+                                rectangleHeight *= Settings.BackgroundHeight;
+                            }
+
+                            var rectangle = new RectangleF(worldtoscreen.X - backgroundBox.X / 2, worldtoscreen.Y - (backgroundBox.Y - textBox.Y) / 2, backgroundBox.X, rectangleHeight);
+
                             Graphics.DrawBox(rectangle, Settings.TextBackgroundColor.Value);
                             Graphics.DrawFrame(rectangle, Settings.TextBorderColor.Value, 1);
                         }
@@ -182,7 +189,7 @@ namespace HeistIcons
                             var icon = GetWorldIcon(e);
                             if (icon == null) continue;
 
-                            worldtoscreen = camera.WorldToScreen(e.Pos.Translate(0, 0, -150));
+                            worldtoscreen = Camera.WorldToScreen(e.Pos.Translate(0, 0, -150));
 
                             if (worldtoscreen == new Vector2()) continue;
 
@@ -199,9 +206,20 @@ namespace HeistIcons
             base.Render();
         }
 
+        public override void EntityAdded(Entity e)
+        {
+            if (e == null) return;
+            if (!e.IsHostile) return;
+            if (!e.Path.Contains("Heist")) return;
+            if (!e.Path.Contains("Monsters") && !e.Path.Contains("Chest")) return;
+            if (e.Type == EntityType.Monster && e.Rarity != MonsterRarity.Unique) return;
+
+            Entities.Enqueue(e);
+        }
+
         private MapIcon GetWorldIcon(Entity e)
         {
-            // if (e.Path.Contains("Hideouts")) { return new MapIcon(GetAtlasTexture("ChestUnopenedGeneric"), Settings.WorldIconSize.Value); }
+            // if (e.Path.Contains("Waypoint")) { return new MapIcon(GetAtlasTexture("ChestUnopenedGeneric"), Settings.WorldIconSize.Value); }
 
             if (e.Path.Contains("Safe")) { return new MapIcon(GetAtlasTexture("ChestUnopenedGeneric"), Settings.WorldIconSize.Value); }
             if (e.Path.Contains("QualityCurrency")) { return new MapIcon(GetAtlasTexture("ChestUnopenedCurrency"), Settings.WorldIconSize.Value, Color.Gray); }
@@ -224,7 +242,7 @@ namespace HeistIcons
 
         public MapIcon GetMapIcon(Entity e)
         {
-            // if (e.Path.Contains("Hideouts")) { return new MapIcon(GetAtlasTexture("HeistPathChest"), Settings.IconSize.Value); }
+            // if (e.Path.Contains("Waypoint")) { return new MapIcon(GetAtlasTexture("HeistPathChest"), Settings.MapIconSize.Value); }
 
             if (e.Path.Contains("Heist") && e.Path.Contains("Monster")) { return new MapIcon(GetAtlasTexture("HeistSpottedMiniBoss"), Settings.MapIconSize.Value * 0.8f); }
 
