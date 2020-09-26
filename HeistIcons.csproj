@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HeistIconsCore.cs" />
+    <Compile Include="Libs\WorldIcon.cs" />
     <Compile Include="Libs\MapIcon.cs" />
     <Compile Include="HeistIconsSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

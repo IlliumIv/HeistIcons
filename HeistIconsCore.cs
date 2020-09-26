@@ -21,7 +21,8 @@ namespace HeistIcons
         private Vector2 screentCenterCache;
         private Vector2 playerPos;
         private float posZ;
-        private Queue<Entity> Entities = new Queue<Entity>(128);
+
+        private Dictionary<Entity, (MapIcon, WorldIcon)> Entities = new Dictionary<Entity, (MapIcon, WorldIcon)>();
 
         private CachedValue<RectangleF> _mapRectangle;
         private CachedValue<float> _diag;
@@ -77,25 +78,42 @@ namespace HeistIcons
             playerPos = GameController.Player.GetComponent<Positioned>().GridPos;
             posZ = GameController.Player.GetComponent<Render>().Pos.Z;
 
-            if (Entities.Count == 0) return;
+            var validEntities = GameController.EntityListWrapper.OnlyValidEntities;
+            var displayedEntities = new Dictionary<Entity, (MapIcon, WorldIcon)>();
 
-            var e = Entities.Dequeue();
+            foreach (var e in validEntities)
+            {
+                if (e == null) continue;
 
-            if (!e.IsValid) return;
-            if (e.Type == EntityType.Monster && e.IsDead) return;
-            if (e.Type == EntityType.Chest && e.IsOpened) return;
+                if (!e.IsHostile) continue;
+                if (!e.Path.Contains("Heist")) continue;
+                if (!e.Path.Contains("Monsters") && !e.Path.Contains("Chest")) continue;
+                if (e.Type == EntityType.Monster && e.Rarity != MonsterRarity.Unique) continue;
 
-            Entities.Enqueue(e);
+                if (e.Type == EntityType.Chest && e.IsOpened) continue;
+                if (e.Type == EntityType.Monster && e.IsDead) continue;
+
+                var icon = GetMapIcon(e);
+                var worldIcon = GetWorldIcon(e);
+
+                if (icon == null && worldIcon == null) continue;
+
+                displayedEntities.Add(e, (icon, worldIcon));
+            }
+
+            Entities = displayedEntities;
         }
 
         public override void Render()
         {
             var mapWindowLargeMapZoom = MapWindow.LargeMapZoom;
+            var displayed = Entities;
 
-            foreach (var e in Entities)
+            foreach (var keyValuePair in displayed)
             {
                 try
                 {
+                    var e = keyValuePair.Key;
                     var renderComponent = e?.GetComponent<Render>();
                     if (renderComponent == null) continue;
 
@@ -113,7 +131,7 @@ namespace HeistIcons
 
                     if (!e.Path.Contains("RewardRoom"))
                     {
-                        var icon = GetMapIcon(e);
+                        var icon = keyValuePair.Value.Item1;
                         if (icon == null) continue;
 
                         var size = icon.Size * (1 + mapWindowLargeMapZoom);
@@ -186,7 +204,7 @@ namespace HeistIcons
 
                         if (Settings.WorldIcon && !e.Path.Contains("RewardRoom"))
                         {
-                            var icon = GetWorldIcon(e);
+                            var icon = keyValuePair.Value.Item2;
                             if (icon == null) continue;
 
                             worldtoscreen = Camera.WorldToScreen(e.Pos.Translate(0, 0, -150));
@@ -206,36 +224,25 @@ namespace HeistIcons
             base.Render();
         }
 
-        public override void EntityAdded(Entity e)
+        private WorldIcon GetWorldIcon(Entity e)
         {
-            if (e == null) return;
-            if (!e.IsHostile) return;
-            if (!e.Path.Contains("Heist")) return;
-            if (!e.Path.Contains("Monsters") && !e.Path.Contains("Chest")) return;
-            if (e.Type == EntityType.Monster && e.Rarity != MonsterRarity.Unique) return;
+            // if (e.Path.Contains("Waypoint")) { return new WorldIcon(GetAtlasTexture("ChestUnopenedGeneric"), Settings.WorldIconSize.Value); }
 
-            Entities.Enqueue(e);
-        }
-
-        private MapIcon GetWorldIcon(Entity e)
-        {
-            // if (e.Path.Contains("Waypoint")) { return new MapIcon(GetAtlasTexture("ChestUnopenedGeneric"), Settings.WorldIconSize.Value); }
-
-            if (e.Path.Contains("Safe")) { return new MapIcon(GetAtlasTexture("ChestUnopenedGeneric"), Settings.WorldIconSize.Value); }
-            if (e.Path.Contains("QualityCurrency")) { return new MapIcon(GetAtlasTexture("ChestUnopenedCurrency"), Settings.WorldIconSize.Value, Color.Gray); }
-            if (e.Path.Contains("Currency")) { return new MapIcon(GetAtlasTexture("ChestUnopenedCurrency"), Settings.WorldIconSize.Value); }
-            if (e.Path.Contains("Armour")) { return new MapIcon(GetAtlasTexture("ChestUnopenedArmour"), Settings.WorldIconSize.Value); }
-            if (e.Path.Contains("Weapons")) { return new MapIcon(GetAtlasTexture("ChestUnopenedWeapons"), Settings.WorldIconSize.Value); }
-            if (e.Path.Contains("Jewellery")) { return new MapIcon(GetAtlasTexture("ChestUnopenedTrinkets"), Settings.WorldIconSize.Value); }
-            if (e.Path.Contains("Jewels")) { return new MapIcon(GetAtlasTexture("Jewel"), Settings.WorldIconSize.Value * 0.8f); }
-            if (e.Path.Contains("Maps")) { return new MapIcon(GetAtlasTexture("ChestUnopenedMaps"), Settings.WorldIconSize.Value); }
-            if (e.Path.Contains("DivinationCards")) { return new MapIcon(GetAtlasTexture("ChestUnopenedDivination"), Settings.WorldIconSize.Value); }
-            if (e.Path.Contains("StackedDecks")) { return new MapIcon(GetAtlasTexture("StackedDecks"), Settings.WorldIconSize.Value * 0.8f); }
-            if (e.Path.Contains("Gems")) { return new MapIcon(GetAtlasTexture("ChestUnopenedGems"), Settings.WorldIconSize.Value); }
-            if (e.Path.Contains("Corrupted")) { return new MapIcon(GetAtlasTexture("Corruption"), Settings.WorldIconSize.Value * 0.8f); }
-            if (e.Path.Contains("Uniques")) { return new MapIcon(GetAtlasTexture("ChestUnopenedUniques"), Settings.WorldIconSize.Value); }
-            if (e.Path.Contains("Prophecies")) { return new MapIcon(GetAtlasTexture("ChestUnopenedProphecies"), Settings.WorldIconSize.Value); }
-            if (e.Path.Contains("Essences")) { return new MapIcon(GetAtlasTexture("ChestUnopenedEssence"), Settings.WorldIconSize.Value); }
+            if (e.Path.Contains("Safe")) { return new WorldIcon(GetAtlasTexture("ChestUnopenedGeneric"), Settings.WorldIconSize.Value); }
+            if (e.Path.Contains("QualityCurrency")) { return new WorldIcon(GetAtlasTexture("ChestUnopenedCurrency"), Settings.WorldIconSize.Value, Color.Gray); }
+            if (e.Path.Contains("Currency")) { return new WorldIcon(GetAtlasTexture("ChestUnopenedCurrency"), Settings.WorldIconSize.Value); }
+            if (e.Path.Contains("Armour")) { return new WorldIcon(GetAtlasTexture("ChestUnopenedArmour"), Settings.WorldIconSize.Value); }
+            if (e.Path.Contains("Weapons")) { return new WorldIcon(GetAtlasTexture("ChestUnopenedWeapons"), Settings.WorldIconSize.Value); }
+            if (e.Path.Contains("Jewellery")) { return new WorldIcon(GetAtlasTexture("ChestUnopenedTrinkets"), Settings.WorldIconSize.Value); }
+            if (e.Path.Contains("Jewels")) { return new WorldIcon(GetAtlasTexture("Jewel"), Settings.WorldIconSize.Value * 0.8f); }
+            if (e.Path.Contains("Maps")) { return new WorldIcon(GetAtlasTexture("ChestUnopenedMaps"), Settings.WorldIconSize.Value); }
+            if (e.Path.Contains("DivinationCards")) { return new WorldIcon(GetAtlasTexture("ChestUnopenedDivination"), Settings.WorldIconSize.Value); }
+            if (e.Path.Contains("StackedDecks")) { return new WorldIcon(GetAtlasTexture("StackedDecks"), Settings.WorldIconSize.Value * 0.8f); }
+            if (e.Path.Contains("Gems")) { return new WorldIcon(GetAtlasTexture("ChestUnopenedGems"), Settings.WorldIconSize.Value); }
+            if (e.Path.Contains("Corrupted")) { return new WorldIcon(GetAtlasTexture("Corruption"), Settings.WorldIconSize.Value * 0.8f); }
+            if (e.Path.Contains("Uniques")) { return new WorldIcon(GetAtlasTexture("ChestUnopenedUniques"), Settings.WorldIconSize.Value); }
+            if (e.Path.Contains("Prophecies")) { return new WorldIcon(GetAtlasTexture("ChestUnopenedProphecies"), Settings.WorldIconSize.Value); }
+            if (e.Path.Contains("Essences")) { return new WorldIcon(GetAtlasTexture("ChestUnopenedEssence"), Settings.WorldIconSize.Value); }
 
             return null;
         }
