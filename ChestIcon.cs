@@ -2,21 +2,21 @@
 using ExileCore.Shared.AtlasHelper;
 using SharpDX;
 
-namespace HeistIcons.Libs
+namespace HeistIcons
 {
-    public class MapIcon
+    public class ChestIcon
     {
         public AtlasTexture Texture;
         public Color Color = Color.White;
         public float Size;
 
-        public MapIcon(AtlasTexture texture, float size, Color color)
+        public ChestIcon(AtlasTexture texture, float size, Color color)
             : this(texture, size)
         {
             Color = color;
         }
 
-        public MapIcon(AtlasTexture texture, float size)
+        public ChestIcon(AtlasTexture texture, float size)
         {
             Texture = texture;
             Size = size;
