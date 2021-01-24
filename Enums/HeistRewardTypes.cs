@@ -18,6 +18,7 @@
         Corrupted,
         Uniques,
         Prophecies,
-        Essences
+        Essences,
+        Fragments
     }
 }

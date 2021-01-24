@@ -52,10 +52,10 @@
   <ItemGroup>
     <Compile Include="Enums\HeistChestTypes.cs" />
     <Compile Include="HeistChest.cs" />
-    <Compile Include="Core\Main.cs" />
+    <Compile Include="Main\Core.cs" />
     <Compile Include="Enums\HeistRewardTypes.cs" />
     <Compile Include="ChestIcon.cs" />
-    <Compile Include="Core\Settings.cs" />
+    <Compile Include="Main\Settings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

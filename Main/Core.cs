@@ -9,11 +9,11 @@ using ExileCore.PoEMemory.Components;
 using System.Collections.Generic;
 using HeistIcons.Enums;
 
-namespace HeistIcons.Core
+namespace HeistIcons.Main
 {
     public class Core : BaseSettingsPlugin<Settings>
     {
-        public static Core MainPlugin { get; set; }
+        public static Core Plugin { get; private set; }
 
         private IngameUIElements _ingameStateIngameUi;
         private float k;
@@ -54,7 +54,7 @@ namespace HeistIcons.Core
         public override bool Initialise()
         {
             Name = "Heist Icons";
-            MainPlugin = this;
+            Plugin = this;
 
             return true;
         }

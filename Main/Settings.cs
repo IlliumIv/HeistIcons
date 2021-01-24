@@ -3,7 +3,7 @@ using ExileCore.Shared.Interfaces;
 using ExileCore.Shared.Nodes;
 using SharpDX;
 
-namespace HeistIcons.Core
+namespace HeistIcons.Main
 {
     public class Settings : ISettings
     {
@@ -34,10 +34,10 @@ namespace HeistIcons.Core
         public RangeNode<float> BackgroundHeight { get; set; } = new RangeNode<float>(1.4f, 0, 2);
 
         [Menu("Text color")]
-        public ColorNode TextColor { get; set; } = new ColorNode(Color.Black);
+        public ColorNode TextColor { get; set; } = new ColorNode(Color.White);
 
         [Menu("Text background color")]
-        public ColorNode TextBackgroundColor { get; set; } = new ColorNode(Color.White);
+        public ColorNode TextBackgroundColor { get; set; } = new ColorNode(Color.DarkGreen);
 
         [Menu("Text border color")]
         public ColorNode TextBorderColor { get; set; } = new ColorNode(Color.Black);
