@@ -15,6 +15,9 @@ namespace HeistIcons.Main
     {
         public static Core Plugin { get; private set; }
 
+        private readonly Queue<Entity> EntityAddedQueue = new Queue<Entity>();
+
+        #region CameraExtension
         private IngameUIElements _ingameStateIngameUi;
         private float k;
         private float scale;
@@ -24,8 +27,6 @@ namespace HeistIcons.Main
         private Vector2 playerPos;
         private CachedValue<RectangleF> mapRectangle;
         private CachedValue<float> diag;
-
-        private readonly Queue<Entity> EntityAddedQueue = new Queue<Entity>();
 
         private ExileCore.PoEMemory.Elements.Map MapWindow => GameController.Game.IngameState.IngameUi.Map;
         private RectangleF MapRectangle => mapRectangle?.Value ?? (mapRectangle = new TimeCache<RectangleF>(() => MapWindow.GetClientRect(), 100)).Value;
@@ -45,6 +46,7 @@ namespace HeistIcons.Main
         private Vector2 ScreenCenter =>
             new Vector2(MapRectangle.Width / 2, MapRectangle.Height / 2 - 20) + new Vector2(MapRectangle.X, MapRectangle.Y) +
             new Vector2(MapWindow.LargeMapShiftX, MapWindow.LargeMapShiftY);
+        #endregion
 
         public override void OnLoad()
         {
@@ -116,9 +118,9 @@ namespace HeistIcons.Main
                 e.SetHudComponent(new HeistChest(e));
             }
 
-            foreach (var entity in GameController.EntityListWrapper.ValidEntitiesByType[EntityType.Chest])
+            foreach (var e in GameController.EntityListWrapper.ValidEntitiesByType[EntityType.Chest])
             {
-                var drawCmd = entity.GetHudComponent<HeistChest>();
+                var drawCmd = e.GetHudComponent<HeistChest>();
                 drawCmd?.Update();
             }
         }
