@@ -16,14 +16,15 @@ namespace HeistIcons
         public ChestIcon MapIcon { get; }
         public bool IsClosed { get; private set; }
 
+        // Right order is important
         public HeistChest(Entity e)
         {
             Entity = e;
             Type = e.Path.Contains("RewardRoom") ? HeistChestTypes.RewardRoom : HeistChestTypes.Normal;
-            Name = e.Path.Clean();
-            Reward = GetRewardType(Name);
-            WorldIcon = GetWorldIcon(Reward);
-            MapIcon = GetMapIcon(Reward);
+            Name = e.Path.Extract_CleanName();
+            Reward = GetRewardType();
+            WorldIcon = GetWorldIcon();
+            MapIcon = GetMapIcon();
             IsClosed = true;
         }
 
@@ -32,51 +33,52 @@ namespace HeistIcons
             IsClosed = Entity.IsValid && !Entity.IsOpened;
         }
 
-        private HeistRewardTypes GetRewardType(string name)
+        // Right order is important
+        private HeistRewardTypes GetRewardType()
         {
-            if (name.Contains("Smugglers"))
+            if (Name.Contains("Smugglers"))
                 return HeistRewardTypes.Smugglers;
-            if (name.Contains("Safe"))
+            if (Name.Contains("Safe"))
                 return HeistRewardTypes.Safe;
-            if (name.Contains("Quality"))
+            if (Name.Contains("Quality"))
                 return HeistRewardTypes.QualityCurrency;
-            if (name.Contains("Currency"))
+            if (Name.Contains("Currency"))
                 return HeistRewardTypes.Currency;
-            if (name.Contains("Armour"))
+            if (Name.Contains("Armour"))
                 return HeistRewardTypes.Armour;
-            if (name.Contains("Weapons"))
+            if (Name.Contains("Weapons"))
                 return HeistRewardTypes.Weapons;
-            if (name.Contains("Jewellery"))
+            if (Name.Contains("Jewellery"))
                 return HeistRewardTypes.Jewellery;
-            if (name.Contains("Trinkets"))
+            if (Name.Contains("Trinkets"))
                 return HeistRewardTypes.Jewellery;
-            if (name.Contains("Jewels"))
+            if (Name.Contains("Jewels"))
                 return HeistRewardTypes.Jewels;
-            if (name.Contains("Maps"))
+            if (Name.Contains("Maps"))
                 return HeistRewardTypes.Maps;
-            if (name.Contains("Divination"))
+            if (Name.Contains("Divination"))
                 return HeistRewardTypes.DivinationCards;
-            if (name.Contains("Stacked"))
+            if (Name.Contains("Stacked"))
                 return HeistRewardTypes.StackedDecks;
-            if (name.Contains("Gems"))
+            if (Name.Contains("Gems"))
                 return HeistRewardTypes.Gems;
-            if (name.Contains("Corrupted"))
+            if (Name.Contains("Corrupted"))
                 return HeistRewardTypes.Corrupted;
-            if (name.Contains("Uniques"))
+            if (Name.Contains("Uniques"))
                 return HeistRewardTypes.Uniques;
-            if (name.Contains("Prophecies"))
+            if (Name.Contains("Prophecies"))
                 return HeistRewardTypes.Prophecies;
-            if (name.Contains("Essences"))
+            if (Name.Contains("Essences"))
                 return HeistRewardTypes.Essences;
-            if (name.Contains("Fragments"))
+            if (Name.Contains("Fragments"))
                 return HeistRewardTypes.Fragments;
 
             return HeistRewardTypes.None;
         }
 
-        private ChestIcon GetWorldIcon(HeistRewardTypes rewardType)
+        private ChestIcon GetWorldIcon()
         {
-            switch (rewardType)
+            switch (Reward)
             {
                 case HeistRewardTypes.Smugglers:
                     return new ChestIcon(Main.Core.Plugin.GetAtlasTexture("HeistSumgglersCache"),
@@ -151,9 +153,9 @@ namespace HeistIcons
             }
         }
 
-        private ChestIcon GetMapIcon(HeistRewardTypes rewardType)
+        private ChestIcon GetMapIcon()
         {
-            switch (rewardType)
+            switch (Reward)
             {
                 case HeistRewardTypes.Safe:
                     return new ChestIcon(Main.Core.Plugin.GetAtlasTexture("HeistPathChest"),
@@ -257,7 +259,7 @@ namespace HeistIcons
             };
         }
 
-        public static string Clean(this string s)
+        public static string Extract_CleanName(this string s)
         {
             StringBuilder sb = new StringBuilder(s);
             s = "";
